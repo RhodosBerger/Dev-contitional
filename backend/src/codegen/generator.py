@@ -33,6 +33,10 @@ class CodeGenerator:
             lstrip_blocks=True
         )
 
+        # Register custom filters
+        self.jinja_env.filters['sql_type'] = sql_type_filter
+        self.jinja_env.filters['pydantic_type'] = pydantic_type_filter
+
     @classmethod
     async def generate_project_async(
         cls,
