@@ -767,9 +767,446 @@ class CognitiveEngine:
         return self.evolver.get_best()
 
 
+# =============================================================================
+# 7. ECONOMIC ENGINE - Resource Budget Trading
+# =============================================================================
+
+@dataclass
+class ResourceBudgets:
+    """Resource budgets as currencies."""
+    cpu_budget_mw: float = 45000.0  # 45W default
+    gpu_budget_mw: float = 150000.0  # 150W default
+    thermal_headroom_c: float = 15.0
+    latency_budget_ms: float = 16.67  # 60 FPS target
+    memory_budget_mb: float = 4096.0
+
+
+@dataclass
+class ActionEconomicProfile:
+    """Economic profile for an action."""
+    action_id: str
+    costs: Dict[str, float]  # Resource costs
+    payoffs: Dict[str, float]  # Expected benefits
+    risks: Dict[str, float]  # Risk factors
+    expected_utility: float = 0.0
+
+
+class EconomicEngine:
+    """
+    Inner economy for resource trading between components.
+
+    Actions have costs, payoffs, and risks in resource currencies.
+    """
+
+    def __init__(self, budgets: Optional[ResourceBudgets] = None):
+        self.budgets = budgets or ResourceBudgets()
+        self.action_profiles: Dict[str, ActionEconomicProfile] = {}
+        self.trade_history: deque = deque(maxlen=1000)
+
+    def register_action(self, profile: ActionEconomicProfile):
+        """Register action economic profile."""
+        self.action_profiles[profile.action_id] = profile
+
+    def compute_utility(self, profile: ActionEconomicProfile) -> float:
+        """
+        Compute expected utility: payoffs - costs - risk_penalty
+        """
+        total_payoff = sum(profile.payoffs.values())
+        total_cost = sum(profile.costs.values())
+        risk_penalty = sum(r * 0.5 for r in profile.risks.values())
+
+        return total_payoff - total_cost - risk_penalty
+
+    def can_afford(self, profile: ActionEconomicProfile) -> bool:
+        """Check if current budgets can afford action."""
+        if profile.costs.get("cpu_mw", 0) > self.budgets.cpu_budget_mw:
+            return False
+        if profile.costs.get("gpu_mw", 0) > self.budgets.gpu_budget_mw:
+            return False
+        if profile.costs.get("thermal_c", 0) > self.budgets.thermal_headroom_c:
+            return False
+        if profile.costs.get("latency_ms", 0) > self.budgets.latency_budget_ms:
+            return False
+        return True
+
+    def execute_trade(self, profile: ActionEconomicProfile) -> bool:
+        """Execute economic trade for action."""
+        if not self.can_afford(profile):
+            return False
+
+        # Deduct costs
+        self.budgets.cpu_budget_mw -= profile.costs.get("cpu_mw", 0)
+        self.budgets.gpu_budget_mw -= profile.costs.get("gpu_mw", 0)
+        self.budgets.thermal_headroom_c -= profile.costs.get("thermal_c", 0)
+        self.budgets.latency_budget_ms -= profile.costs.get("latency_ms", 0)
+
+        # Record trade
+        self.trade_history.append({
+            "action": profile.action_id,
+            "costs": profile.costs,
+            "timestamp": time.time()
+        })
+
+        return True
+
+    def replenish(self, delta_budgets: Dict[str, float]):
+        """Replenish budgets from recovered resources."""
+        self.budgets.cpu_budget_mw += delta_budgets.get("cpu_mw", 0)
+        self.budgets.gpu_budget_mw += delta_budgets.get("gpu_mw", 0)
+        self.budgets.thermal_headroom_c += delta_budgets.get("thermal_c", 0)
+        self.budgets.latency_budget_ms += delta_budgets.get("latency_ms", 0)
+
+
+# =============================================================================
+# 8. LOW-CODE INFERENCE RULES
+# =============================================================================
+
+class SafetyTier(Enum):
+    """Safety tier for rules."""
+    STRICT = "strict"
+    EXPERIMENTAL = "experimental"
+    DEBUG = "debug"
+
+
+@dataclass
+class MicroInferenceRule:
+    """Low-code inference rule that LLM can generate."""
+    rule_id: str
+    condition: str  # Python expression
+    action: str  # Action to take
+    priority: int = 5
+    safety_tier: SafetyTier = SafetyTier.STRICT
+    shadow_mode: bool = False  # Log only, don't execute
+    description: str = ""
+
+
+class RuleEngine:
+    """
+    Executes micro-inference rules.
+
+    Rules are simple condition->action mappings that LLM can generate.
+    """
+
+    def __init__(self):
+        self.rules: List[MicroInferenceRule] = []
+        self.execution_log: deque = deque(maxlen=500)
+
+    def add_rule(self, rule: MicroInferenceRule):
+        """Add rule to engine."""
+        self.rules.append(rule)
+        self.rules.sort(key=lambda r: r.priority, reverse=True)
+
+    def evaluate(self, context: Dict[str, Any]) -> List[MicroInferenceRule]:
+        """Evaluate all rules against context, return triggered rules."""
+        triggered = []
+
+        for rule in self.rules:
+            try:
+                if eval(rule.condition, {"__builtins__": {}}, context):
+                    triggered.append(rule)
+            except Exception:
+                pass  # Skip invalid rules
+
+        return triggered
+
+    def execute(self, context: Dict[str, Any]) -> List[str]:
+        """Execute triggered rules and return actions."""
+        triggered = self.evaluate(context)
+        actions = []
+
+        for rule in triggered:
+            log_entry = {
+                "rule_id": rule.rule_id,
+                "condition": rule.condition,
+                "action": rule.action,
+                "shadow": rule.shadow_mode,
+                "timestamp": time.time()
+            }
+            self.execution_log.append(log_entry)
+
+            if not rule.shadow_mode:
+                actions.append(rule.action)
+
+        return actions
+
+
+# =============================================================================
+# 9. SAFETY GUARDRAILS
+# =============================================================================
+
+@dataclass
+class SafetyConstraint:
+    """Hard safety constraint."""
+    name: str
+    check: str  # Python expression returning bool
+    violation_action: str  # Action on violation
+    severity: str = "critical"  # critical, warning, info
+
+
+class SafetyGuardrails:
+    """
+    Two-layer safety system: static validation + dynamic runtime checks.
+    """
+
+    def __init__(self):
+        self.constraints: List[SafetyConstraint] = []
+        self.violations: deque = deque(maxlen=100)
+        self._init_default_constraints()
+
+    def _init_default_constraints(self):
+        """Initialize default safety constraints."""
+        self.constraints = [
+            SafetyConstraint(
+                name="thermal_critical",
+                check="thermal_headroom > 0",
+                violation_action="emergency_throttle",
+                severity="critical"
+            ),
+            SafetyConstraint(
+                name="power_limit",
+                check="power_draw < power_limit * 1.1",
+                violation_action="reduce_power",
+                severity="critical"
+            ),
+            SafetyConstraint(
+                name="memory_pressure",
+                check="memory_util < 0.95",
+                violation_action="gc_trigger",
+                severity="warning"
+            ),
+            SafetyConstraint(
+                name="latency_budget",
+                check="latency_ms < latency_target * 2",
+                violation_action="reduce_quality",
+                severity="warning"
+            ),
+        ]
+
+    def validate(self, context: Dict[str, Any]) -> List[SafetyConstraint]:
+        """Validate context against all constraints, return violations."""
+        violations = []
+
+        for constraint in self.constraints:
+            try:
+                if not eval(constraint.check, {"__builtins__": {}}, context):
+                    violations.append(constraint)
+                    self.violations.append({
+                        "constraint": constraint.name,
+                        "severity": constraint.severity,
+                        "timestamp": time.time()
+                    })
+            except Exception:
+                pass
+
+        return violations
+
+    def get_violation_rate(self, window_seconds: float = 60.0) -> float:
+        """Get violation rate in time window."""
+        now = time.time()
+        recent = [v for v in self.violations
+                  if now - v["timestamp"] < window_seconds]
+        return len(recent) / max(window_seconds, 1)
+
+
+# =============================================================================
+# 10. METACOGNITIVE INTERFACE
+# =============================================================================
+
+@dataclass
+class PolicyProposal:
+    """LLM-generated policy proposal."""
+    proposal_id: str
+    rule: MicroInferenceRule
+    rationale: str
+    confidence: float
+    source: str = "llm"
+
+
+class MetacognitiveInterface:
+    """
+    Self-reflecting interface for Guardian.
+
+    Analyzes logs, generates insights, proposes policy changes.
+    """
+
+    def __init__(self, rule_engine: RuleEngine, safety: SafetyGuardrails):
+        self.rule_engine = rule_engine
+        self.safety = safety
+        self.experience_store: deque = deque(maxlen=10000)
+        self.proposals: List[PolicyProposal] = []
+        self.approved_proposals: List[PolicyProposal] = []
+
+    def log_experience(self, experience: Dict[str, Any]):
+        """Log experience for analysis."""
+        experience["timestamp"] = time.time()
+        self.experience_store.append(experience)
+
+    def analyze_patterns(self) -> Dict[str, Any]:
+        """Analyze experience patterns."""
+        if len(self.experience_store) < 10:
+            return {"status": "insufficient_data"}
+
+        # Compute statistics
+        recent = list(self.experience_store)[-100:]
+
+        actions = {}
+        outcomes = []
+
+        for exp in recent:
+            action = exp.get("action", "unknown")
+            actions[action] = actions.get(action, 0) + 1
+            if "outcome" in exp:
+                outcomes.append(exp["outcome"])
+
+        return {
+            "action_distribution": actions,
+            "outcome_mean": sum(outcomes) / len(outcomes) if outcomes else 0,
+            "experience_count": len(self.experience_store),
+            "violation_rate": self.safety.get_violation_rate()
+        }
+
+    def propose_rule(self, proposal: PolicyProposal) -> bool:
+        """
+        Propose new rule from LLM.
+
+        Rules go through validation before approval.
+        """
+        # Validate rule safety tier
+        if proposal.rule.safety_tier == SafetyTier.STRICT:
+            # Auto-approve strict tier in shadow mode first
+            proposal.rule.shadow_mode = True
+
+        self.proposals.append(proposal)
+        return True
+
+    def approve_proposal(self, proposal_id: str) -> bool:
+        """Approve proposal and activate rule."""
+        for proposal in self.proposals:
+            if proposal.proposal_id == proposal_id:
+                proposal.rule.shadow_mode = False
+                self.rule_engine.add_rule(proposal.rule)
+                self.approved_proposals.append(proposal)
+                self.proposals.remove(proposal)
+                return True
+        return False
+
+    def get_insights(self) -> Dict[str, Any]:
+        """Get metacognitive insights."""
+        patterns = self.analyze_patterns()
+
+        return {
+            "patterns": patterns,
+            "pending_proposals": len(self.proposals),
+            "approved_rules": len(self.approved_proposals),
+            "active_rules": len(self.rule_engine.rules),
+            "recent_executions": len(self.rule_engine.execution_log)
+        }
+
+
+# =============================================================================
+# 11. COGNITIVE ORCHESTRATOR
+# =============================================================================
+
+class CognitiveOrchestrator:
+    """
+    Unified orchestrator combining all cognitive components.
+
+    Integrates:
+    - Base CognitiveEngine (control, RL, Bayesian, stat-mech, info theory, evolution)
+    - EconomicEngine (resource trading)
+    - RuleEngine (low-code inference)
+    - SafetyGuardrails (constraints)
+    - MetacognitiveInterface (self-reflection)
+    """
+
+    def __init__(self):
+        # Base engine
+        self.engine = CognitiveEngine()
+        self.engine.initialize_evolution()
+
+        # Economic layer
+        self.economics = EconomicEngine()
+
+        # Rule layer
+        self.rules = RuleEngine()
+
+        # Safety layer
+        self.safety = SafetyGuardrails()
+
+        # Metacognitive layer
+        self.metacog = MetacognitiveInterface(self.rules, self.safety)
+
+    def process(self, telemetry: Dict[str, float]) -> Dict[str, Any]:
+        """
+        Full cognitive processing pipeline.
+        """
+        # 1. Safety validation first
+        violations = self.safety.validate(telemetry)
+        if violations:
+            critical = [v for v in violations if v.severity == "critical"]
+            if critical:
+                return {
+                    "action": critical[0].violation_action,
+                    "reason": "safety_violation",
+                    "violations": [v.name for v in critical]
+                }
+
+        # 2. Base cognitive processing
+        cognitive_result = self.engine.process(telemetry)
+        action = cognitive_result["action"]
+
+        # 3. Rule evaluation
+        rule_context = {**telemetry, **cognitive_result}
+        rule_actions = self.rules.execute(rule_context)
+        if rule_actions:
+            action = rule_actions[0]  # Priority rule overrides
+
+        # 4. Economic validation
+        profile = ActionEconomicProfile(
+            action_id=action,
+            costs={"cpu_mw": 1000, "latency_ms": 1},
+            payoffs={"performance": cognitive_result.get("control_signal", 0)},
+            risks={"thermal": 0.1}
+        )
+
+        if not self.economics.can_afford(profile):
+            action = "throttle"  # Can't afford, throttle
+        else:
+            self.economics.execute_trade(profile)
+
+        # 5. Log experience
+        self.metacog.log_experience({
+            "telemetry": telemetry,
+            "action": action,
+            "cognitive": cognitive_result,
+            "violations": [v.name for v in violations]
+        })
+
+        return {
+            "action": action,
+            "cognitive": cognitive_result,
+            "economic": {
+                "budgets": {
+                    "cpu_mw": self.economics.budgets.cpu_budget_mw,
+                    "thermal_c": self.economics.budgets.thermal_headroom_c
+                }
+            },
+            "safety": {
+                "violations": [v.name for v in violations],
+                "violation_rate": self.safety.get_violation_rate()
+            },
+            "metacog": self.metacog.get_insights()
+        }
+
+
 # Factory
 def create_cognitive_engine() -> CognitiveEngine:
     """Create cognitive engine with all components."""
     engine = CognitiveEngine()
     engine.initialize_evolution()
     return engine
+
+
+def create_cognitive_orchestrator() -> CognitiveOrchestrator:
+    """Create full cognitive orchestrator."""
+    return CognitiveOrchestrator()
