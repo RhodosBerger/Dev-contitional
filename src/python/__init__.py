@@ -79,6 +79,11 @@ from .kernel_bridge import (
     ComponentType, ComponentState, RiverTransport, RiverDirection, RiverQoS,
     create_kernel, create_full_stack_kernel
 )
+from .cognitive_engine import (
+    CognitiveEngine, FeedbackController, TDLearner, BayesianTracker,
+    StatMechAllocator, EntropyAnalyzer, EvolutionaryOptimizer,
+    SystemState, ControlSignal, Preset, create_cognitive_engine
+)
 
 __all__ = [
     # Core
@@ -139,4 +144,8 @@ __all__ = [
     "GamesaKernel", "Component", "River", "RiverEndpoint", "RiverMessage",
     "ComponentType", "ComponentState", "RiverTransport", "RiverDirection", "RiverQoS",
     "create_kernel", "create_full_stack_kernel",
+    # Cognitive Engine
+    "CognitiveEngine", "FeedbackController", "TDLearner", "BayesianTracker",
+    "StatMechAllocator", "EntropyAnalyzer", "EvolutionaryOptimizer",
+    "SystemState", "ControlSignal", "Preset", "create_cognitive_engine",
 ]
