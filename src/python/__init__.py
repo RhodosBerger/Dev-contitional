@@ -108,6 +108,16 @@ from .breakthrough_engine import (
     FutureState, HardwareNeuron, QuantumPreset, CodePatch, SwarmNode,
     create_breakthrough_engine
 )
+from .hypervisor_layer import (
+    Hypervisor, ConsciousnessEngine, RealitySynthesizer, ZeroCopyFabric,
+    ConsciousnessState, AwarenessLevel, RealityBudget, UnifiedPointer,
+    MemoryRegion, SystemPhase, MetaLearner, create_hypervisor
+)
+from .emergent_intelligence import (
+    EmergentIntelligence, AttractorLandscape, PhaseTransitionEngine,
+    CollectiveIntelligence, SynapseNetwork, Attractor, Agent, Synapse,
+    PhaseState, create_emergent_intelligence
+)
 
 __all__ = [
     # Core
@@ -191,4 +201,12 @@ __all__ = [
     "QuantumInspiredOptimizer", "SelfModifyingEngine", "SwarmIntelligence",
     "FutureState", "HardwareNeuron", "QuantumPreset", "CodePatch", "SwarmNode",
     "create_breakthrough_engine",
+    # Hypervisor Layer
+    "Hypervisor", "ConsciousnessEngine", "RealitySynthesizer", "ZeroCopyFabric",
+    "ConsciousnessState", "AwarenessLevel", "RealityBudget", "UnifiedPointer",
+    "MemoryRegion", "SystemPhase", "MetaLearner", "create_hypervisor",
+    # Emergent Intelligence
+    "EmergentIntelligence", "AttractorLandscape", "PhaseTransitionEngine",
+    "CollectiveIntelligence", "SynapseNetwork", "Attractor", "Agent", "Synapse",
+    "PhaseState", "create_emergent_intelligence",
 ]
