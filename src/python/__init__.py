@@ -96,6 +96,12 @@ from .gpu_optimizer import (
     UnifiedGpuOptimizer, GpuVendor, UnifiedPreset, GpuInfo,
     OptimizationResult, GpuDetector, create_gpu_optimizer
 )
+from .generative_engine import (
+    GenerativeEngine, GeneratorType, OutputType, QualityLevel,
+    LatentVector, GeneratedOutput, GenerationRequest, GeneratorConfig,
+    OpenVINOGenerator, ProceduralGenerator, RecipeGenerator,
+    create_generative_engine
+)
 
 __all__ = [
     # Core
@@ -169,4 +175,9 @@ __all__ = [
     # Unified GPU Optimizer
     "UnifiedGpuOptimizer", "GpuVendor", "UnifiedPreset", "GpuInfo",
     "OptimizationResult", "GpuDetector", "create_gpu_optimizer",
+    # Generative Engine
+    "GenerativeEngine", "GeneratorType", "OutputType", "QualityLevel",
+    "LatentVector", "GeneratedOutput", "GenerationRequest", "GeneratorConfig",
+    "OpenVINOGenerator", "ProceduralGenerator", "RecipeGenerator",
+    "create_generative_engine",
 ]
