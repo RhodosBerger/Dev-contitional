@@ -17,6 +17,12 @@ pub mod policy;
 pub mod micro_inference;
 pub mod feature_registry;
 pub mod time_series;
+pub mod orchestration;
+pub mod combat_latency_policy;
+pub mod vulkan_inspector;
+pub mod stack_injector;
+pub mod grid_injector;
+pub mod fallback;
 
 pub use types::*;
 pub use config::Config;
@@ -29,6 +35,12 @@ pub use policy::{PolicyEngine, PolicyResult};
 pub use micro_inference::MicroInference;
 pub use feature_registry::FeatureRegistry;
 pub use time_series::TimeSeriesLogger;
+pub use orchestration::{Orchestrator, CycleResult, OrchestratorStats};
+pub use combat_latency_policy::{CombatLatencyPolicy, PinningDirective};
+pub use vulkan_inspector::{VulkanInspector, SceneAnalysis, GovernorSuggestion};
+pub use stack_injector::{StackInjector, BoostInjection};
+pub use grid_injector::{GridInjector, GridReplica, GridCell as InjectorCell};
+pub use fallback::{FallbackManager, TrustLevel};
 
 /// Main orchestrator combining all components
 pub struct GamesaBot {
