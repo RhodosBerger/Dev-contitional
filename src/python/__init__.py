@@ -60,6 +60,20 @@ from .synthesis_dashboard import (
     SynthesisDashboard, SystemState, ZoneInfo, ViewMode,
     create_synthesis_dashboard
 )
+from .prioritized_replay import (
+    PrioritizedReplayBuffer, Experience, SumTree,
+    ThermalPredictor, GeneticPresetEvolver,
+    create_prioritized_buffer, create_thermal_predictor, create_preset_evolver
+)
+from .shared_memory_ipc import (
+    SharedMemoryRingBuffer, TelemetryPacket, SignalPacket,
+    TelemetryChannel, SignalChannel, IPCBridge,
+    create_ipc_server, create_ipc_client
+)
+from .guardian_hooks import (
+    GuardianBridge, ValidatorBridge, ZoneState, BoostConfig, CraftPreset,
+    BoostAction, CorePolicy, create_guardian_bridge, create_validator_bridge
+)
 
 __all__ = [
     # Core
@@ -105,4 +119,15 @@ __all__ = [
     # Synthesis Dashboard
     "SynthesisDashboard", "SystemState", "ZoneInfo", "ViewMode",
     "create_synthesis_dashboard",
+    # Prioritized Replay & Learning
+    "PrioritizedReplayBuffer", "Experience", "SumTree",
+    "ThermalPredictor", "GeneticPresetEvolver",
+    "create_prioritized_buffer", "create_thermal_predictor", "create_preset_evolver",
+    # Shared Memory IPC
+    "SharedMemoryRingBuffer", "TelemetryPacket", "SignalPacket",
+    "TelemetryChannel", "SignalChannel", "IPCBridge",
+    "create_ipc_server", "create_ipc_client",
+    # Guardian Hooks
+    "GuardianBridge", "ValidatorBridge", "ZoneState", "BoostConfig", "CraftPreset",
+    "BoostAction", "CorePolicy", "create_guardian_bridge", "create_validator_bridge",
 ]
