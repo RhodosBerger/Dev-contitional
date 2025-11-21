@@ -1,5 +1,27 @@
 # GAMESA / KrystalStack Feature Map
 
+## System Overview
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                              UNIFIED BRAIN                                       │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐              │
+│  │ Temporal Fusion  │  │    Attention     │  │   Predictive     │              │
+│  │  (Multi-scale)   │──│   Mechanism      │──│    Coding        │              │
+│  └──────────────────┘  └──────────────────┘  └──────────────────┘              │
+│           │                     │                     │                         │
+│           └─────────────────────┴─────────────────────┘                         │
+│                                 │                                               │
+│  ┌──────────────────────────────┴───────────────────────────────────┐          │
+│  │                    COGNITIVE ORCHESTRATOR                         │          │
+│  │    + INVENTION ENGINE + EMERGENT SYSTEM + HOMEOSTATIC REG        │          │
+│  └──────────────────────────────────────────────────────────────────┘          │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Core Architecture
 
 ```
@@ -308,3 +330,106 @@ print(f"Action: {result['action']}")
 print(f"Budgets: {result['economic']['budgets']}")
 print(f"Violations: {result['safety']['violations']}")
 ```
+
+---
+
+## 12. Invention Engine (Novel Algorithms)
+
+| Component | File | Status | Innovation |
+|-----------|------|--------|------------|
+| SuperpositionScheduler | `invention_engine.py` | WORKING | Quantum-inspired task states |
+| SpikeTimingAllocator | `invention_engine.py` | WORKING | Neuromorphic STDP allocation |
+| SwarmOptimizer | `invention_engine.py` | WORKING | Particle swarm optimization |
+| CausalInferenceEngine | `invention_engine.py` | WORKING | Granger causality detection |
+| HyperdimensionalEncoder | `invention_engine.py` | WORKING | 10,000D holographic memory |
+| ReservoirComputer | `invention_engine.py` | WORKING | Echo state network prediction |
+
+**Key Innovations:**
+- Tasks exist in superposition until "measured"
+- Spike-timing dependent plasticity for resource flow
+- Causal graph discovery with root cause analysis
+- Holographic associative memory
+
+---
+
+## 13. Unified Brain
+
+| Component | File | Status | Function |
+|-----------|------|--------|----------|
+| TemporalFusion | `unified_brain.py` | WORKING | Multi-timescale harmonization |
+| AttentionMechanism | `unified_brain.py` | WORKING | 4-head telemetry attention |
+| PredictiveCoding | `unified_brain.py` | WORKING | Hierarchical prediction |
+| HomeostaticRegulator | `unified_brain.py` | WORKING | Biological stability |
+| UnifiedBrain | `unified_brain.py` | WORKING | Master integration |
+| DistributedBrain | `unified_brain.py` | WORKING | Multi-node consensus |
+
+**Timescales:**
+```
+micro (1ms)  → meso (10ms) → macro (100ms) → meta (1s)
+```
+
+---
+
+## 14. Emergent System
+
+| Component | File | Status | Behavior |
+|-----------|------|--------|----------|
+| CellularAutomata | `emergent_system.py` | WORKING | Pattern emergence |
+| SelfOrganizingMap | `emergent_system.py` | WORKING | Kohonen clustering |
+| AntColonyOptimizer | `emergent_system.py` | WORKING | Pheromone paths |
+| StigmergicEnvironment | `emergent_system.py` | WORKING | Indirect coordination |
+| CriticalityDetector | `emergent_system.py` | WORKING | Edge of chaos |
+| MorphogeneticField | `emergent_system.py` | WORKING | Turing patterns |
+
+**Self-Organization:**
+- Cellular automata for pattern detection
+- SOM maps state space to 2D topology
+- Stigmergy enables indirect agent communication
+- Criticality: power law exponent ~1.5-2.5, branching ratio ~1.0
+
+---
+
+## Full Integration Example
+
+```python
+from unified_brain import create_unified_brain
+
+# Create master brain
+brain = create_unified_brain()
+
+# Process telemetry through all systems
+result = brain.process({
+    "frametime_ms": 16.6,
+    "thermal_headroom": 0.8,
+    "cpu_util": 0.6,
+    "gpu_util": 0.7,
+    "power_draw": 120,
+    "temperature": 72.0,
+    "fps": 60.0,
+    "memory_util": 0.5
+})
+
+print(f"Decision: {result['decision']}")
+print(f"Surprise: {result['surprise']}")
+print(f"Stress: {result['stress']}")
+print(f"Source: {result['decision']['source']}")
+```
+
+---
+
+## Updated File Index
+
+| File | Lines | Purpose |
+|------|-------|---------|
+| `cognitive_engine.py` | 1212 | Core cognitive + orchestrator |
+| `invention_engine.py` | 909 | Novel algorithmic innovations |
+| `unified_brain.py` | 587 | Master integration layer |
+| `emergent_system.py` | 812 | Self-organizing behaviors |
+| `crystal_protocol.py` | ~200 | Protocol definitions |
+| `crystal_socketd.py` | ~350 | Market exchange |
+| `crystal_agents.py` | ~400 | Trading agents |
+| `guardian_hex.py` | ~300 | Order clearing |
+| `platform_hal.py` | ~500 | Hardware abstraction |
+| `memory_manager.py` | ~600 | Memory tiering |
+
+**Total: ~6,000+ lines of innovative code**
