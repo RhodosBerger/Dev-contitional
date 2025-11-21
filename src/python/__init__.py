@@ -123,6 +123,8 @@ from .unified_system import (
     PredictionLevel, EmergenceLevel, GenerationLevel,
     SystemMode, SystemMetrics, create_unified_system
 )
+from .realtime_monitor import RealtimeMonitor, create_monitor
+from .cli import CLI, main as cli_main
 
 __all__ = [
     # Core
@@ -218,4 +220,8 @@ __all__ = [
     "UnifiedSystem", "HardwareLevel", "SignalLevel", "LearningLevel",
     "PredictionLevel", "EmergenceLevel", "GenerationLevel",
     "SystemMode", "SystemMetrics", "create_unified_system",
+    # Realtime Monitor
+    "RealtimeMonitor", "create_monitor",
+    # CLI
+    "CLI", "cli_main",
 ]
