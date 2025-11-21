@@ -46,6 +46,7 @@ from .mongo_store import (
     MongoStore, MongoConfig, CollectionName, InMemoryCollection,
     create_mongo_store
 )
+from .flask_app import create_app, run_app
 
 __all__ = [
     # Core
@@ -79,4 +80,6 @@ __all__ = [
     # MongoDB Store
     "MongoStore", "MongoConfig", "CollectionName", "InMemoryCollection",
     "create_mongo_store",
+    # Flask App
+    "create_app", "run_app",
 ]
