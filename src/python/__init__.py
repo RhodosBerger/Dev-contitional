@@ -15,6 +15,11 @@ from .feature_engine import (
     LogBase, TrigFunc, scale_alpha_beta_theta, log_scale, trig_encode
 )
 from .runtime import Runtime, RuntimeVar, RuntimeFunc, VarSource, quick_eval
+from .allocation import (
+    Allocator, ResourcePool, AllocationRequest, Allocation,
+    AllocationStrategy, ResourceType, Priority, AllocationConstraints,
+    PoolStats, create_default_allocator
+)
 
 __all__ = [
     "MetacognitiveInterface",
@@ -33,4 +38,14 @@ __all__ = [
     "RuntimeFunc",
     "VarSource",
     "quick_eval",
+    "Allocator",
+    "ResourcePool",
+    "AllocationRequest",
+    "Allocation",
+    "AllocationStrategy",
+    "ResourceType",
+    "Priority",
+    "AllocationConstraints",
+    "PoolStats",
+    "create_default_allocator",
 ]
