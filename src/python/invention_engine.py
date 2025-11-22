@@ -586,13 +586,24 @@ class HyperdimensionalEncoder:
     robust similarity search and associative memory.
     """
 
-    def __init__(self, dimensions: int = 10000):
+    def __init__(self, dimensions: int = 10000, max_items: int = 20):
         self.dimensions = dimensions
         self.item_memory: Dict[str, List[int]] = {}
+        self.max_items = max_items  # Limit memory growth
         self.sequence_memory: deque = deque(maxlen=100)
 
         # Random base vectors for variables
         self._base_vectors: Dict[str, List[int]] = {}
+
+        # Encoding cache for performance
+        self._encoding_cache: Dict[int, List[int]] = {}
+        self._max_cache_size = 100
+
+        # Performance tracking
+        self._total_queries = 0
+        self._total_stores = 0
+        self._cache_hits = 0
+        self._cache_misses = 0
 
     def _get_base_vector(self, name: str) -> List[int]:
         """Get or create random base vector for variable."""
@@ -611,6 +622,12 @@ class HyperdimensionalEncoder:
         positions = positions % self.dimensions
         return vector[-positions:] + vector[:-positions]
 
+    def _state_to_cache_key(self, state: Dict[str, float]) -> int:
+        """Convert state to cache key (quantized for robustness)."""
+        # Round values to 1 decimal place for caching
+        rounded = tuple(sorted((k, round(v, 1)) for k, v in state.items()))
+        return hash(rounded)
+
     def _bind(self, v1: List[int], v2: List[int]) -> List[int]:
         """XOR-like binding operation."""
         return [a * b for a, b in zip(v1, v2)]
@@ -628,11 +645,20 @@ class HyperdimensionalEncoder:
 
     def encode_state(self, state: Dict[str, float]) -> List[int]:
         """
-        Encode system state as hyperdimensional vector.
+        Encode system state as hyperdimensional vector (with caching).
 
         Each variable is encoded by binding its base vector
         with a rotated version based on its value.
         """
+        # Check cache first
+        cache_key = self._state_to_cache_key(state)
+        if cache_key in self._encoding_cache:
+            self._cache_hits += 1
+            return self._encoding_cache[cache_key]
+
+        self._cache_misses += 1
+
+        # Encode as normal
         encoded_vars = []
 
         for var, value in state.items():
@@ -642,7 +668,16 @@ class HyperdimensionalEncoder:
             encoded_vars.append(rotated)
 
         # Bundle all variable encodings
-        return self._bundle(encoded_vars)
+        encoded = self._bundle(encoded_vars)
+
+        # Cache result (with size limit)
+        if len(self._encoding_cache) >= self._max_cache_size:
+            # Evict random item
+            self._encoding_cache.pop(next(iter(self._encoding_cache)))
+
+        self._encoding_cache[cache_key] = encoded
+
+        return encoded
 
     def encode_sequence(self, states: List[Dict[str, float]]) -> List[int]:
         """Encode sequence of states with temporal binding."""
@@ -665,12 +700,25 @@ class HyperdimensionalEncoder:
         return dot / self.dimensions
 
     def store(self, name: str, state: Dict[str, float]):
-        """Store state in item memory."""
+        """Store state in item memory with LRU eviction."""
         encoded = self.encode_state(state)
         self.item_memory[name] = encoded
+        self._total_stores += 1
+
+        # Evict oldest item if over limit
+        if len(self.item_memory) > self.max_items:
+            # Remove first (oldest) item
+            oldest_key = next(iter(self.item_memory))
+            del self.item_memory[oldest_key]
 
     def query(self, state: Dict[str, float], top_k: int = 5) -> List[Tuple[str, float]]:
         """Find most similar stored states."""
+        self._total_queries += 1
+
+        # Early return if no items stored
+        if not self.item_memory:
+            return []
+
         query_vec = self.encode_state(state)
 
         similarities = []
@@ -848,11 +896,11 @@ class InventionEngine:
         # Causal inference
         self.causal = CausalInferenceEngine()
 
-        # Hyperdimensional encoding
-        self.hd = HyperdimensionalEncoder(dimensions=5000)
+        # Hyperdimensional encoding (optimized: 1000 dims, 20 max items)
+        self.hd = HyperdimensionalEncoder(dimensions=1000, max_items=20)
 
-        # Reservoir prediction
-        self.reservoir = ReservoirComputer(input_size=10, reservoir_size=200)
+        # Reservoir prediction (optimized: 100 neurons)
+        self.reservoir = ReservoirComputer(input_size=10, reservoir_size=100)
 
     def _init_spiking_network(self):
         """Initialize spiking network topology."""
