@@ -1,0 +1,30 @@
+FANUC RISE v2.1 Advanced CNC Copilot
+Copyright 2024-2026 Advanced CNC Copilot Project Contributors
+
+This product includes software developed by the Advanced CNC Copilot Project
+(http://github.com/Dev-contitional/advanced_cnc_copilot).
+
+This software incorporates components from various open-source projects, 
+including but not limited to:
+- FastAPI (https://fastapi.tiangolo.com/)
+- SQLAlchemy (https://www.sqlalchemy.org/)
+- TimescaleDB (https://www.timescale.com/)
+- Redis (https://redis.io/)
+- Docker (https://www.docker.com/)
+- Kubernetes (https://kubernetes.io/)
+- Prometheus (https://prometheus.io/)
+- Grafana (https://grafana.com/)
+
+For corporate and commercial use, this software provides enterprise-grade
+capabilities for CNC manufacturing intelligence, including:
+- Real-time telemetry monitoring and analysis
+- AI-driven optimization algorithms
+- Neuro-Safety gradient computation
+- Shadow Council governance patterns
+- Economic modeling for manufacturing efficiency
+- Swarm intelligence for fleet management
+- Digital twin capabilities
+- Predictive maintenance algorithms
+
+Commercial users are encouraged to review the licensing terms carefully and 
+consult with legal counsel regarding any specific compliance requirements.
