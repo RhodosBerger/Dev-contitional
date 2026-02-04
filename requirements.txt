@@ -1,0 +1,13 @@
+# GAMESA/KrystalStack Dependencies
+# Core Framework
+numpy>=1.24.0      # Matrix operations for Hexadecimal 3D Grid
+pandas>=2.0.0      # DataFrame support for Economics Engine
+scipy>=1.10.0      # Scientific computing for Physics Synthesis
+
+# AI & Metacognition
+torch>=2.0.0       # PyTorch for Neural Policy Gradients
+openvino>=2023.0   # Neural Acceleration (Intel)
+
+# Safety & Monitoring
+pydantic>=2.0      # Data validation for Safety Contracts
+psutil>=5.9.0      # Telemetry for Spinal Reflex
