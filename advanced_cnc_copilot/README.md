@@ -149,6 +149,10 @@ A three-agent system ensuring safe AI integration:
 - `docs/DEVELOPER_EDITING_GUIDE.md`: safe code editing workflow and PR checklist.
 - `docs/METHODOLOGY_OF_ANALOGY.md`: analogy methodics and validation protocol.
 - `docs/CODER_LEXICON.md`: canonical project vocabulary for consistent implementation language.
+- `docs/COMPONENT_COMPLETION_REPORT.md`: evidence-based status of what is done vs in progress.
+- `docs/NEXT_WEEK_DEVELOPMENT_PLAN.md`: concrete next-week implementation commitments.
+- `docs/MONETIZATION_ARTICLE_PRODUCTIZED_AI_CNC.md`: monetization strategy for product tiers and outcome-based pricing.
+- `docs/MONETIZATION_ARTICLE_SERVICES_AND_ECOSYSTEM.md`: services/ecosystem-led commercialization strategy.
 
 ## Delivery Blueprint (Roadmap -> Execution)
 
