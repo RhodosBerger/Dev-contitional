@@ -147,3 +147,6 @@ graph LR
 2. Shadow mode acceptance thresholds met.
 3. Controlled pilot on non-critical operations.
 4. Progressive rollout with rollback triggers.
+
+## Further Reading
+- Operational and contract details: `docs/TECHNICAL_REFERENCE.md`.

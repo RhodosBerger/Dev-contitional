@@ -6,6 +6,17 @@ This document turns the project roadmaps into an executable delivery plan. It is
 - `cms/theories/PROJECT_STATE_AND_ROADMAP.md`
 - `NEXT_STEPS_OVERVIEW.md`
 
+## 0) Roadmap Source Crosswalk (MD -> Implementation)
+
+| Source document | What it contributes | Implemented as track |
+|---|---|---|
+| `ROADMAP_TO_ARCHITECTURE.md` | Macro architecture phases and target platform shape | A, B, E |
+| `IMPLEMENTATION_STRATEGY_PHASE2.md` | Mid-phase delivery and integration sequencing | B, C, D |
+| `cms/theories/PROJECT_STATE_AND_ROADMAP.md` | Current-state inventory + quarterly objectives | A, C, E |
+| `NEXT_STEPS_OVERVIEW.md` | Tactical next actions and commercialization flow | C, D, E |
+
+This crosswalk exists so every roadmap statement is traceable to an engineering workstream.
+
 ## 1) Dependency Baseline (must pass first)
 
 ### Required runtime layers
@@ -148,3 +159,15 @@ A feature is done only if all conditions hold:
 3. Implement Fleet selector persistence in dashboard UI.
 4. Add Auditor reason-code schema and include in websocket payload.
 5. Create simulator dataset export command for SFT + preference data.
+
+
+## 6) Documentation Standards Used
+
+This blueprint follows documentation conventions commonly used in mature industrial software projects:
+- **Traceability**: each workstream references roadmap sources.
+- **Acceptance criteria**: every feature track has measurable outcomes.
+- **Operational readiness**: runability and fallback behavior are first-class requirements.
+- **Safety by design**: deterministic controls are explicit and mandatory.
+- **Lifecycle clarity**: includes implementation sequence, DoD, and immediate actions.
+
+For low-level operational and contract details, see `docs/TECHNICAL_REFERENCE.md`.

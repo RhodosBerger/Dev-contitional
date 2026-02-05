@@ -140,6 +140,13 @@ A three-agent system ensuring safe AI integration:
 - Nightmare Training for offline learning through simulation
 
 
+## Documentation Set (Complete)
+
+- `README.md`: project entrypoint, setup, and quickstart.
+- `SYSTEM_ARCHITECTURE.md`: architecture and data-flow map.
+- `FEATURE_IMPLEMENTATION_BLUEPRINT.md`: roadmap-driven delivery blueprint.
+- `docs/TECHNICAL_REFERENCE.md`: production-style technical contracts, NFRs, safety and release criteria.
+
 ## Delivery Blueprint (Roadmap -> Execution)
 
 - **Feature execution plan**: `FEATURE_IMPLEMENTATION_BLUEPRINT.md` (maps roadmap docs into tracks, sprints, DoD, and acceptance criteria).
