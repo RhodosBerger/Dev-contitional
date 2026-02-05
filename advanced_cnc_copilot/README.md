@@ -146,6 +146,9 @@ A three-agent system ensuring safe AI integration:
 - `SYSTEM_ARCHITECTURE.md`: architecture and data-flow map.
 - `FEATURE_IMPLEMENTATION_BLUEPRINT.md`: roadmap-driven delivery blueprint.
 - `docs/TECHNICAL_REFERENCE.md`: production-style technical contracts, NFRs, safety and release criteria.
+- `docs/DEVELOPER_EDITING_GUIDE.md`: safe code editing workflow and PR checklist.
+- `docs/METHODOLOGY_OF_ANALOGY.md`: analogy methodics and validation protocol.
+- `docs/CODER_LEXICON.md`: canonical project vocabulary for consistent implementation language.
 
 ## Delivery Blueprint (Roadmap -> Execution)
 

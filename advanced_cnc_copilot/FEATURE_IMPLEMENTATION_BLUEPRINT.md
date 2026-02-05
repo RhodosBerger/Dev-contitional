@@ -171,3 +171,9 @@ This blueprint follows documentation conventions commonly used in mature industr
 - **Lifecycle clarity**: includes implementation sequence, DoD, and immediate actions.
 
 For low-level operational and contract details, see `docs/TECHNICAL_REFERENCE.md`.
+
+Contributor workflow docs:
+- `docs/DEVELOPER_EDITING_GUIDE.md`
+- `docs/METHODOLOGY_OF_ANALOGY.md`
+- `docs/CODER_LEXICON.md`
+
