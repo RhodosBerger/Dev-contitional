@@ -1,29 +1,29 @@
 # Dev-contitional Platform
 
-Hlavný repozitár je rozdelený na 2 prepojené, ale samostatne prezentované projekty:
+This repository is presented as 2 connected but independently positioned projects:
 
-- **60%: Krystal Vino + GAMESA 3D Grid** (hlavná platforma)
-- **40%: FANUC RISE** (vedľajšia priemyselná vetva, FOCAS integrácia)
+- **60%: Krystal Vino + GAMESA 3D Grid** (primary platform)
+- **40%: FANUC RISE** (secondary industrial branch, FOCAS integration)
 
 ---
 
-## 1) Krystal Vino + GAMESA 3D Grid (hlavná platforma, 60%)
+## 1) Krystal Vino + GAMESA 3D Grid (Primary Platform, 60%)
 
-### Čo je Krystal Vino
-Krystal Vino je výkonová orchestrace nad OpenVINO/oneAPI pre osobné počítače.  
-Cieľom je znižovať latenciu a zvyšovať throughput pomocou adaptívneho plánovania, telemetrie a riadenia runtime politík.
+### What Krystal Vino Is
+Krystal Vino is a performance orchestration layer on top of OpenVINO/oneAPI for personal computers.  
+Its goal is to reduce latency and increase throughput through adaptive planning, telemetry, and runtime policy control.
 
-Kód: `openvino_oneapi_system/`
+Codebase: `openvino_oneapi_system/`
 
-### Kľúčové komponenty
-- **OpenVINO runtime vrstva**: inferencia s fallback režimom.
-- **oneAPI/OpenMP tuning**: dynamické nastavovanie `ONEAPI_NUM_THREADS`, `OMP_NUM_THREADS`, `OPENVINO_NUM_STREAMS`, `KMP_*`.
-- **Ekonomický planner + evolučný tuner**: online voľba režimov `defensive/balanced/aggressive`.
-- **GAMESA 3D Grid**: logická 3D pamäťová vrstva pre organizáciu/swap pracovných dát.
-- **Delegované logovanie**: samostatné kanály `system`, `telemetry`, `planning`, `policy`, `inference`, `grid_update`.
+### Core Components
+- **OpenVINO runtime layer**: inference with a safe fallback mode.
+- **oneAPI/OpenMP tuning**: dynamic control of `ONEAPI_NUM_THREADS`, `OMP_NUM_THREADS`, `OPENVINO_NUM_STREAMS`, `KMP_*`.
+- **Economic planner + evolutionary tuner**: online switching between `defensive/balanced/aggressive` modes.
+- **GAMESA 3D Grid**: logical 3D memory layer for data organization/swap behavior.
+- **Delegated logging**: separate channels for `system`, `telemetry`, `planning`, `policy`, `inference`, `grid_update`.
 
-### Preukázateľné výsledky (Linux benchmark)
-Zdroj: `openvino_oneapi_system/logs/benchmark_latest.txt`
+### Proven Results (Linux Benchmark)
+Source: `openvino_oneapi_system/logs/benchmark_latest.txt`
 
 - **Latency improvement**: `66.01%`
 - **Throughput improvement**: `234.59%`
@@ -31,49 +31,49 @@ Zdroj: `openvino_oneapi_system/logs/benchmark_latest.txt`
 - **Sysbench improvement**: `99.55%`  
   Baseline: `2615.43 events/s` -> Adaptive: `5219.10 events/s`
 
-### Rýchle spustenie
+### Quick Run
 ```bash
 python3 openvino_oneapi_system/main.py --cycles 10 --interval 0.5
 python3 openvino_oneapi_system/benchmark_linux.py --cycles 60
 ```
 
-### Debian balík (whole package)
-Vygenerovaný balík:
+### Debian Package (Whole Package)
+Generated package:
 - `openvino_oneapi_system/dist/openvino-oneapi-system_1.1.0_amd64.deb`
 
-Obsahuje:
+Includes:
 - CLI: `ovo-runtime`, `ovo-benchmark`
-- service unit: `openvino-oneapi-system.service`
-- konfig: `/etc/default/openvino-oneapi-system`
+- Service unit: `openvino-oneapi-system.service`
+- Config: `/etc/default/openvino-oneapi-system`
 
 ---
 
-## 2) FANUC RISE (sekundárna vetva, 40%)
+## 2) FANUC RISE (Secondary Branch, 40%)
 
-### Charakteristika projektu
-FANUC RISE je priemyselná CNC vrstva orientovaná na operácie, telemetry a workflow automatizáciu.  
-FOCAS je tu **vedľajšia integračná vrstva**, nie hlavný produktový cieľ.
+### Project Characterization
+FANUC RISE is an industrial CNC layer focused on operations, telemetry, and workflow automation.  
+FOCAS is a **secondary integration layer**, not the primary product target.
 
-Kód: `advanced_cnc_copilot/`
+Codebase: `advanced_cnc_copilot/`
 
-### Zameranie
-- CNC operátorské workflow a dohľad
-- API + UI pre výrobný monitoring
-- FANUC telemetry bridge (mock/real režim podľa prostredia)
-- rozšíriteľné backend služby pre výrobnú analytiku
+### Scope
+- CNC operator workflows and supervision
+- API + UI for production monitoring
+- FANUC telemetry bridge (mock/real mode based on environment)
+- Extensible backend services for manufacturing analytics
 
-### Kde dáva zmysel v celom ekosystéme
-- Krystal Vino rieši výkonový runtime a optimalizáciu výpočtu.
-- FANUC RISE rieši priemyselný kontext, machine/data napojenie a operátorské použitie.
-- Spolu tvoria pipeline: **výkonové jadro + priemyselná exekúcia**.
+### Role in the Overall Ecosystem
+- Krystal Vino handles performance runtime orchestration and compute optimization.
+- FANUC RISE handles industrial context, machine/data connectivity, and operator use.
+- Together they form a pipeline: **performance core + industrial execution**.
 
 ---
 
-## Repo mapa
-- `openvino_oneapi_system/` hlavná výkonnostná platforma (OpenVINO, oneAPI, GAMESA 3D Grid)
-- `advanced_cnc_copilot/` FANUC RISE priemyselný stack
-- `docs/` doplnkové technické podklady
+## Repository Map
+- `openvino_oneapi_system/` primary performance platform (OpenVINO, oneAPI, GAMESA 3D Grid)
+- `advanced_cnc_copilot/` FANUC RISE industrial stack
+- `docs/` additional technical materials
 
-## Poznámka k smerovaniu
-Priorita repozitára je Krystal Vino/GAMESA 3D Grid ako hlavná platforma pre PC hardvér a inferenčný výkon.  
-FANUC RISE zostáva samostatná, sekundárna doménová vetva pre CNC integrácie.
+## Direction Note
+The priority of this repository is Krystal Vino/GAMESA 3D Grid as the main platform for PC hardware and inference performance.  
+FANUC RISE remains a separate, secondary domain branch for CNC integrations.
