@@ -10,6 +10,7 @@ import logging
 import json
 import os
 from dataclasses import dataclass
+from typing import Optional
 from datetime import datetime
 try:
     from backend.cms.message_bus import global_bus, Message

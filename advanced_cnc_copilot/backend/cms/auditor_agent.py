@@ -23,6 +23,9 @@ class ValidationResult:
     death_penalty_reason: str = ""
 
 
+from backend.cms.message_bus import global_bus, Message
+
+
 class PhysicsValidator:
     """
     Physics Validator - Implements deterministic validation of proposals against physical constraints.
@@ -340,9 +343,58 @@ class AuditorAgent:
     """
     
     def __init__(self):
+        self.bus = global_bus  # Connect to global message bus
         self.physics_validator = PhysicsValidator()
         self.logger = logging.getLogger(__name__)
         self.constraint_history = []  # Track all constraints that have been enforced
+        self.logger.info("Auditor Agent Initialized. Physics Constraints Loaded.")
+
+    async def start(self):
+        """Monitor proposed plans for safety validation."""
+        self.bus.subscribe("DRAFT_PLAN", self._evaluate_safety)
+        self.logger.info("Auditor is monitoring safety for [DRAFT_PLAN]...")
+
+    async def _evaluate_safety(self, msg: Message):
+        """
+        Event handler for DRAFT_PLAN. Validates the plan and publishes vote.
+        """
+        plan = msg.payload
+        job_id = plan.get("job_id", "unknown_job")
+        
+        # Extract parameters from plan for validation
+        # Mapping plan keys to validation keys
+        proposed_params = {
+            "feed_rate": plan.get("feed_rate", 1000),
+            "rpm": plan.get("rpm", 2000),
+            "depth": plan.get("depth", 1.0),
+            "material": plan.get("material", "steel")
+        }
+        
+        # Mock current machine state for now (in real system, would query machine)
+        current_state = {
+            "spindle_load": 0.0,
+            "temperature": 25.0,
+            "vibration_x": 0.0
+        }
+        
+        # Perform Validation
+        result = self.validate_strategy(
+            strategy_intent=f"Validate Job {job_id}",
+            proposed_parameters=proposed_params,
+            current_machine_state=current_state
+        )
+        
+        # Publish Result
+        response_payload = {
+            "job_id": job_id,
+            "status": "PASS" if result.is_approved else "FAIL",
+            "vote": 1.0 if result.is_approved else -1.0, # Auditor has VETO power (-1.0)
+            "fitness": result.fitness_score,
+            "errors": result.death_penalty_reason if not result.is_approved else None,
+            "trace": result.reasoning_trace
+        }
+        
+        await self.bus.publish("VALIDATION_RESULT", response_payload, sender_id="AUDITOR")
     
     def validate_strategy(self, strategy_intent: str, proposed_parameters: Dict[str, Any], 
                          current_machine_state: Dict[str, Any],

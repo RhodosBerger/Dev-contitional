@@ -43,6 +43,7 @@ try:
     from backend.cms.economic_engine import EconomicEngine
     from backend.cms.swarm_brain import SwarmBrain
     from backend.cms.twin_engine import TwinEngine
+    from backend.cms.dopamine_engine import dopamine_engine
     
     CMS_AVAILABLE = True
 except Exception as e:
@@ -142,6 +143,9 @@ class MasterOrchestrator:
                 self.scalpel = InterventionAgent()
                 self.swarm_logic = SwarmBrain(self)
                 self.twin = TwinEngine()
+                
+                # Initialize Intelligence Engine (Truth Engine)
+                self.intelligence_engine = CrossSessionIntelligence()
                 
                 from backend.core.robotics_agent import robotics
                 self.robotics = robotics
@@ -291,14 +295,17 @@ class MasterOrchestrator:
         Theory 2: The Truth Engine (LLM Time Travel).
         Periodically correlactes cross-session data to find 'Black Swan' insights.
         """
-        from backend.main import intelligence_engine
+        # from backend.main import intelligence_engine # REMOVED: Circular Import
         logger.info("🕵️ Truth Engine (Time Travel) Active.")
         
         while True:
             await asyncio.sleep(30) # Correlate every 30 seconds
             try:
+                if not hasattr(self, 'intelligence_engine'):
+                    continue
+
                 logger.info("[TRUTH_ENGINE] Correlating historical telemetry...")
-                connections = intelligence_engine.connect_unrelated_events(time_window_hours=24)
+                connections = self.intelligence_engine.connect_unrelated_events(time_window_hours=24)
                 
                 if connections:
                     for conn in connections:
@@ -703,9 +710,18 @@ class MasterOrchestrator:
         }
 
     def get_system_status(self):
+        neuro_state = {}
+        try:
+             # If CMS modules loaded successfully, fetch dopamine state
+             if CMS_AVAILABLE and 'dopamine_engine' in globals():
+                 neuro_state = dopamine_engine.state.__dict__
+        except Exception as e:
+             logger.warning(f"Could not fetch neuro state: {e}")
+
         return {
             "global_status": self.status,
             "systems": self.systems,
+            "neuro_state": neuro_state,
             "timestamp": datetime.now().isoformat()
         }
 

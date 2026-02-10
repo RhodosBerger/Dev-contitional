@@ -4,11 +4,16 @@ const API_BASE = '/api/llm';
 let currentPreset = null;
 
 // Elements
+// Elements
 const presetsList = document.getElementById('presets-list');
 const promptInput = document.getElementById('prompt-input');
 const sendBtn = document.getElementById('send-btn');
 const chatHistory = document.getElementById('chat-history');
 const modelSelect = document.getElementById('model-select');
+const modeSelect = document.getElementById('mode-select');
+const dopamineBar = document.getElementById('dopamine-bar');
+const cortisolBar = document.getElementById('cortisol-bar');
+const visionBtn = document.getElementById('vision-btn');
 
 // Load Presets on Start
 async function loadPresets() {
@@ -51,9 +56,9 @@ function appendMessage(role, text) {
 
     // Convert newlines to breaks for simple rendering, or use a markdown lib in real app
     // Simple naive markdown for code blocks
-    let formattedText = text
+    let formattedText = typeof text === 'string' ? text
         .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
-        .replace(/\n/g, '<br>');
+        .replace(/\n/g, '<br>') : JSON.stringify(text, null, 2);
 
     msgDiv.innerHTML = `
         <div class="avatar">${role === 'human' ? 'YOU' : 'AI'}</div>
@@ -97,24 +102,80 @@ async function sendMessage() {
     promptInput.style.height = '60px';
 
     const typingId = showTypingIndicator();
+    const mode = modeSelect.value;
 
     try {
-        const res = await fetch(`${API_BASE}/generate`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                prompt: text,
-                model: modelSelect.value
-            })
-        });
+        let res;
+        let data;
 
-        const data = await res.json();
-        removeTypingIndicator(typingId);
-        appendMessage('system', data.text);
+        if (mode === 'chat') {
+            res = await fetch(`${API_BASE}/generate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: text,
+                    model: modelSelect.value
+                })
+            });
+            data = await res.json();
+            removeTypingIndicator(typingId);
+            appendMessage('system', data.text);
+        } else {
+            // Consultation / G-Code Mode
+            const type = mode === 'gcode' ? 'GENERATE_GCODE' : 'CONSULTATION';
+
+            // Note: In a real app, we'd need auth headers here if enabled
+            res = await fetch('/api/manufacturing/request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer dev-token' // Mock token or implement login
+                },
+                body: JSON.stringify({
+                    type: type,
+                    payload: {
+                        prompt: text,
+                        machine_id: "VMC-01", // Default for now
+                        material: "Aluminum 6061" // Default
+                    }
+                })
+            });
+            data = await res.json();
+            removeTypingIndicator(typingId);
+
+            // Handle different response structures
+            console.log("Response:", data);
+
+            if (data.status === 'success' || data.status === 'QUEUED') {
+                const responseText = data.data ? JSON.stringify(data.data, null, 2) : (data.message || "Request processed.");
+                appendMessage('system', `[${data.status}] ${responseText}`);
+            } else {
+                appendMessage('system', JSON.stringify(data, null, 2));
+            }
+        }
 
     } catch (e) {
         removeTypingIndicator(typingId);
         appendMessage('system', `Error: ${e.message}`);
+    }
+}
+
+// Neuro-State Polling
+async function updateNeuroState() {
+    try {
+        const res = await fetch('/api/health'); // This calls orchestrator.get_system_status()
+        const data = await res.json();
+
+        if (data && data.neuro_state) {
+            // Update Dashboard
+            const dopamine = data.neuro_state.dopamine || 50;
+            const cortisol = data.neuro_state.cortisol || 20;
+
+            dopamineBar.style.width = `${dopamine}%`;
+            cortisolBar.style.width = `${cortisol}%`;
+        }
+    } catch (e) {
+        // Silent fail for polling
     }
 }
 
@@ -133,6 +194,13 @@ promptInput.addEventListener('input', function () {
     this.style.height = (this.scrollHeight) + 'px';
 });
 
+if (visionBtn) {
+    visionBtn.addEventListener('click', () => {
+        alert("Vision Cortex Triggered: Scanning Frame...");
+        // Future: POST to /api/vision/analyze
+    });
+}
+
 // Helper for chips
 window.setInput = (text) => {
     promptInput.value = text;
@@ -141,3 +209,5 @@ window.setInput = (text) => {
 
 // Init
 loadPresets();
+setInterval(updateNeuroState, 2000); // Poll every 2s
+updateNeuroState(); // Initial call

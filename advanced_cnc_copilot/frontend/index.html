@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,11 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <div class="app-container">
         <!-- Sidebar -->
@@ -17,7 +21,7 @@
                 <div class="logo-icon">C</div>
                 <h1>CNC Copilot</h1>
             </div>
-            
+
             <div class="section-title">Prompt Presets</div>
             <div id="presets-list" class="presets-list">
                 <!-- Presets will be loaded here -->
@@ -29,23 +33,55 @@
                     <span class="status-dot online"></span>
                     <span>System Online</span>
                 </div>
-                <div class="status-item">
-                     <span class="status-dot warning"></span>
-                     <span>MOCK Mode</span>
+                <!-- Neuroal State Dashboard -->
+                <div class="neuro-dashboard"
+                    style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <div style="font-size: 0.8rem; margin-bottom: 0.5rem; color: var(--text-muted);">NEURO STATE</div>
+                    <div class="neuro-metric">
+                        <span>Dopamine</span>
+                        <div class="progress-bar">
+                            <div id="dopamine-bar" class="fill" style="width: 50%; background: #00ff88;"></div>
+                        </div>
+                    </div>
+                    <div class="neuro-metric" style="margin-top:0.5rem">
+                        <span>Cortisol</span>
+                        <div class="progress-bar">
+                            <div id="cortisol-bar" class="fill" style="width: 20%; background: #ff0055;"></div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Vision Control -->
+            <div class="vision-panel"
+                style="margin-top: 1rem; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                <div style="font-size: 0.8rem; margin-bottom: 0.5rem;">VISION CORTEX</div>
+                <button id="vision-btn" class="action-btn"
+                    style="width:100%; font-size:0.8rem; padding:0.5rem; background:rgba(255,255,255,0.1); border:none; color:white; cursor:pointer;">
+                    👁️ Analyze Frame
+                </button>
             </div>
         </aside>
 
         <!-- Main Chat Area -->
         <main class="chat-area">
             <header class="chat-header">
-                <div class="model-selector">
-                    <label>Model:</label>
-                    <select id="model-select">
-                        <option value="mock-model">Mock Model (Fast)</option>
-                        <option value="open_llama_3b_v2">OpenLLaMA 3B</option>
-                        <option value="gpt-4">GPT-4 (OpenAI)</option>
-                    </select>
+                <div class="controls-row" style="display:flex; gap:1rem; align-items:center;">
+                    <div class="mode-selector">
+                        <label>Mode:</label>
+                        <select id="mode-select">
+                            <option value="chat">Chat / Q&A</option>
+                            <option value="consultation">Agent Consultation</option>
+                            <option value="gcode">G-Code Gen</option>
+                        </select>
+                    </div>
+                    <div class="model-selector">
+                        <label>Model:</label>
+                        <select id="model-select">
+                            <option value="mock-model">Mock Model (Fast)</option>
+                            <option value="open_llama_3b_v2">OpenLLaMA 3B</option>
+                        </select>
+                    </div>
                 </div>
             </header>
 
@@ -53,7 +89,7 @@
                 <div class="message system">
                     <div class="avatar">AI</div>
                     <div class="content">
-                        Hello! I am your CNC Copilot. Select a preset or type a prompt to get started. 
+                        Hello! I am your CNC Copilot. Select a preset or type a prompt to get started.
                         I can help with G-Code generation, optimization, and troubleshooting.
                     </div>
                 </div>
@@ -65,11 +101,13 @@
                     <button class="chip" onclick="setInput('Explain G0 vs G1')">Explain G0 vs G1</button>
                     <button class="chip" onclick="setInput('Calculate RPM for 10mm drill')">Drill RPM Calc</button>
                 </div>
-                
+
                 <div class="input-wrapper">
-                    <textarea id="prompt-input" placeholder="Ask about CNC operations, G-Code, or tooling..." rows="1"></textarea>
+                    <textarea id="prompt-input" placeholder="Ask about CNC operations, G-Code, or tooling..."
+                        rows="1"></textarea>
                     <button id="send-btn" aria-label="Send">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
                             <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
                         </svg>
                     </button>
@@ -79,4 +117,5 @@
     </div>
     <script src="app.js"></script>
 </body>
+
 </html>
