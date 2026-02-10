@@ -1,34 +1,45 @@
-# Contributing to the Industrial Organism
+# Contributing to CNC Copilot
 
-Thank you for your interest in evolving **GAMESA/KrystalStack**. We are not just writing code; we are architecting biological systems for silicon hardware.
+Thank you for your interest in contributing! We welcome community involvement to make manufacturing smarter and safer.
 
-## 🌱 How to Contribute
+## Getting Started
 
-### 1. The Philosophy
-Before submitting code, ask yourself:
-*   Does this maximize **economic utility**? (Does it save resources or make them tradable?)
-*   Is it **biologically resilient**? (Does it handle failure gracefully, like a reflex?)
-*   Is it **safe**? (Does it respect the "Spinal Reflex" limits?)
+1.  **Fork** the repository.
+2.  **Clone** your fork:
+    ```bash
+    git clone https://github.com/your-username/Dev-contitional.git
+    cd Dev-contitional
+    ```
+3.  **Install Dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
+4.  **Set up Environment**:
+    ```bash
+    cp .env.example .env
+    ```
 
-### 2. Branching Strategy
-We use semantic branching to denote evolutionary steps:
-*   `evolution/feature-name` (New features)
-*   `mutation/bug-fix` (Bug fixes)
-*   `adaptation/performance` (Optimization)
+## Development Workflow
 
-### 3. Pull Request Process
-1.  Fork the repository.
-2.  Create your branch (`git checkout -b evolution/my-feature`).
-3.  Commit your changes using [Conventional Commits](https://www.conventionalcommits.org/).
-4.  Push to your fork and submit a Pull Request.
-5.  **The Architects Council** will review your code for safety and biological alignment.
+-   **Backend**: The core logic resides in `advanced_cnc_copilot/backend`.
+-   **Frontend**: The UI is in `advanced_cnc_copilot/frontend`.
+-   **Mock Mode**: By default, the system runs in MOCK mode (Mock CNC, Mock Kafka, Mock LLM). This allows you to develop without hardware.
 
-## 🧪 Testing
-All submissions must pass the **Safety Contracts**.
+## Running the App
+
 ```bash
-# Run the safety validation suite
-python -m src.python.guardian --verify-contracts
+python3 advanced_cnc_copilot/backend/main.py
 ```
+Open [http://localhost:8000](http://localhost:8000) in your browser.
 
-## 📜 Legal
-By contributing, you agree that your contributions will be licensed under the project's **MIT License** for the Core, while acknowledging the commercial boundaries of the Enterprise Nexus.
+## Submitting Changes
+
+1.  Create a new branch: `git checkout -b feature/my-new-feature`
+2.  Commit your changes: `git commit -m 'Add new feature'`
+3.  Push to the branch: `git push origin feature/my-new-feature`
+4.  Submit a **Pull Request**.
+
+## Code Style
+
+-   Follow PEP 8 for Python.
+-   Ensure new features have corresponding verification scripts or tests.

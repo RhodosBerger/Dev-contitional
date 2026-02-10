@@ -79,8 +79,12 @@ app.add_middleware(
 )
 
 # --- Static Files & Dashboard ---
-dashboard_dir = os.path.join(os.path.dirname(__file__), "cms/dashboard")
-app.mount("/dashboard", StaticFiles(directory=dashboard_dir), name="dashboard")
+# frontend_dir = os.path.join(os.path.dirname(__file__), "../frontend")
+# Use absolute path calculation for robustness
+frontend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../frontend"))
+
+# Mount the static directory to serve CSS/JS
+app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
 
 from fastapi.responses import HTMLResponse, FileResponse
 
@@ -91,8 +95,8 @@ async def startup_event():
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
-    # Serve the main dashboard index
-    return FileResponse(os.path.join(dashboard_dir, "index.html"))
+    # Serve the main app index
+    return FileResponse(os.path.join(frontend_dir, "index.html"))
 
 # --- Auth Endpoints ---
 
@@ -124,6 +128,10 @@ async def read_users_me(current_user: User = Depends(get_current_active_user)):
 
 # --- Phase 4: Marketplace Ecosystem ---
 app.include_router(marketplace_router, prefix="/api/marketplace", tags=["marketplace"])
+
+# --- LLM API Expansion ---
+from backend.api import llm_routes
+app.include_router(llm_routes.router)
 
 # --- Core/Orchestrator Endpoints ---
 

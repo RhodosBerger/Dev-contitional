@@ -1,79 +1,65 @@
-# GAMESA / KrystalStack
-### The Industrial Organism Foundation
+# CNC Copilot: Advanced Manufacturing AI
 
-![Status](https://img.shields.io/badge/Status-Evolutionary_Stable-green) ![License](https://img.shields.io/badge/License-MIT_Open_Core-blue) ![Foundation](https://img.shields.io/badge/Foundation-KrystalStack-purple)
+**Bridging the gap between generative AI and industrial CNC machining.**
 
-> **"Stop Computing. Start Evolving."**
+CNC Copilot is an intelligent assistant designed to help machinists, engineers, and operators optimize their workflows. It integrates:
+- **Local LLMs (OpenLLaMA)** for secure, offline code generation.
+- **RAG (Retrieval Augmented Generation)** for querying machine logs and manuals.
+- **Fanuc FOCAS Integration** (Simulated & Real) for machine telemetry.
+- **Modern Web UI** for interaction.
 
-**GAMESA/KrystalStack** is the world's first **Biological Computing Framework**. It transforms static hardware resources—GPUs, memory, and bandwidth—into a dynamic, self-healing "Industrial Organism" that trades resources like economic assets.
+## 🚀 Features
 
----
+- **G-Code Generation**: Explain, optimize, and generate G-Code.
+- **Real-time Telemetry**: Monitor machine status (Run, Stop, Alarm) and load.
+- **Log Analysis**: diagnose issues using historical data.
+- **Zero-Dependency Fallback**: Runs entirely in Python without heavy external databases if needed.
 
-## ⚡ Why Use KrystalStack?
-In a traditional system, your hardware is "dumb." It waits for instructions.
-In a **KrystalStack** system, your hardware is alive. It:
-1.  **Negotiates** for resources in an internal cross-forex market.
-2.  **Heals** memory fragmentation dynamically using 3D Grid topologies.
-3.  **Learns** from failure through metacognitive reflection.
+## 📦 Installation
 
-### 💰 For User & Enterprise
-- **Reduce Cloud Costs**: "Economic Trading" maximizes every millisecond of compute time.
-- **Run Larger Models**: 3D Grid Memory allows you to run models that shouldn't fit on your VRAM.
-- **Unbreakable Stability**: Bio-mimetic safety layers prevent crashes before they happen.
+1.  **Clone the Repository**:
+    ```bash
+    git clone https://github.com/your-username/Dev-contitional.git
+    cd Dev-contitional
+    ```
 
----
+2.  **Install Dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-## 🚀 Key Capabilities
+3.  **Configure Environment**:
+    ```bash
+    cp .env.example .env
+    # Edit .env to match your setup (Mock vs Real)
+    ```
 
-### 1. 💹 Economic Resource Trading
-Your GPU cores and VRAM are no longer just "hardware"; they are assets. The system uses a **Cross-Forex Market** to trade these assets between processes in real-time, ensuring that high-value tasks always get the resources they need at the lowest "cost."
+## 🛠 Usage
 
-### 2. 🧬 3D Grid Memory System
-Forget flat memory addresses. We use a **Hexadecimal 3D Topology** (Tier/Slot/Depth) that aligns data based on semantic proximity. This reduces cache misses and allows for "Holographic Swapping"—moving entire functional blocks without stalling the system.
+### Start the System
+Run the main backend entry point. This serves both the **API** and the **Web UI**.
 
-### 3. 🛡️ The "Shadow Council" Safety
-Our **Two-Layer Safety System** mimics biological reflexes:
-- **Spinal Reflex**: Sub-millisecond, deterministic guards that prevent physical hardware damage.
-- **Cortical Reflection**: A Metacognitive AI that analyzes long-term patterns and "rewrites" safety policies safely.
+```bash
+python3 advanced_cnc_copilot/backend/main.py
+```
 
----
+-   **Frontend**: [http://localhost:8000](http://localhost:8000)
+-   **API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
-## 📦 Editions & Support
+### Docker Deployment
+For a production-like environment with Redis:
 
-| Feature | **Community Edition** | **Enterprise "Nexus"** |
-| :--- | :---: | :---: |
-| **Core Framework** | ✅ | ✅ |
-| **3D Grid Memory** | ✅ | ✅ |
-| **Economic Trading** | ✅ | ✅ |
-| **Certified Drivers** | ❌ | ✅ |
-| **SLA Support** | Community | 24/7 Dedicated |
-| **Compliance Audits** | ❌ | ✅ |
+```bash
+docker-compose up --build
+```
 
-### [👉 Get Commercial Support & Enterprise Licensing](COMMERCIAL_SUPPORT.md)
+## 🧠 Architecture
 
----
+-   **Backend**: FastAPI (Python)
+-   **Frontend**: Vanilla JS + CSS (Single Page App)
+-   **LLM Engine**: Llama.cpp (via Python bindings) or OpenAI/Mock.
+-   **Vector Store**: NumPy-based in-memory store (Fallbacks to ChromaDB).
 
-## 📚 Documentation
-- **[Marketing Strategy & USPs](MARKETING_STRATEGY.md)**: Why this technology changes the game.
-- **[The Foundation Charter](FOUNDATION_CHARTER.md)**: Our mission and governance.
-- **[Monetization Plan](MONETIZATION_PLAN.md)**: How we sustain the ecosystem.
-- **[About the Architect](ARCHITECT_PROFILE.md)**: The philosophy behind the Industrial Organism.
+## 🤝 Contributing
 
-### Technical Docs
-- [Project Overview](FINAL_PROJECT_OVERVIEW.md)
-- [Installation Guide](README_OLD.md#installation) *(Legacy)*
-
----
-
-## 🤝 Join the Evolution
-We are not just building software; we are building a Foundation.
-- **Contribute**: Submit PRs and join the "Community Senate."
-- **Sponsor**: Join the "Trade Federation" to steer the future of the project.
-
-**[Become a Foundation Member](FOUNDATION_CHARTER.md)**
-
----
-
-<p align="center">
-  <sub>Managed by The KrystalStack Foundation. © 2026. All Rights Reserved.</sub>
-</p>
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
