@@ -1,0 +1,12 @@
+[package]
+name = "rust_planner"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "rust_planner"
+crate-type = ["cdylib"]
+
+[dependencies]
+# PyO3 could be used here for easier bindings, but we keep it simple for now.
+# pyo3 = { version = "0.19.0", features = ["extension-module"] }

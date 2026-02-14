@@ -1,55 +1,37 @@
 version: '3.8'
 
 services:
-  app:
+  cortex-core:
     build: .
-    ports:
-      - "8000:8000"
-    environment:
-      - REDIS_URL=redis://redis:6379/0
-      - APP_ENV=production
-    depends_on:
-      - redis
+    image: gamesa/cortex-v2:latest
+    container_name: gamesa_cortex_v2
+    restart: always
+
+    # Enable Hardware Passthrough for GPU/NPU
+    devices:
+      - /dev/dri:/dev/dri # Intel/AMD GPU
+      # - /dev/kfd:/dev/kfd # AMD ROCm (Uncomment if needed)
+
+      # For NVIDIA support (requires nvidia-container-toolkit)
+      # deploy:
+      #   resources:
+      #     reservations:
+      #       devices:
+      #         - driver: nvidia
+      #           count: 1
+      #           capabilities: [gpu]
+
     volumes:
-      - ./advanced_cnc_copilot:/app/advanced_cnc_copilot
-      - ./logs:/app/logs
+      - .:/app # Mount current dir for live reload/code access
 
-  redis:
-    image: "redis:alpine"
-    ports:
-      - "6379:6379"
-
-  db:
-    image: postgres:15
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: changeme123
-      POSTGRES_DB: fanuc_rise
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - PYTHONUNBUFFERED=1
+      - VULKAN_SDK_PATH=/usr
+      - OPENCL_VENDOR_PATH=/etc/OpenCL/vendors
 
-volumes:
-  postgres_data:
-
-    # Optional: Kafka for Real RAG
-    # zookeeper:
-    #   image: confluentinc/cp-zookeeper:latest
-    #   environment:
-    #     ZOOKEEPER_CLIENT_PORT: 2181
-    #     ZOOKEEPER_TICK_TIME: 2000
-
-    # kafka:
-    #   image: confluentinc/cp-kafka:latest
-    #   depends_on:
-    #     - zookeeper
-    #   ports:
-    #     - "9092:9092"
-    #   environment:
-    #     KAFKA_BROKER_ID: 1
-    #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
-    #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-    #     KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-    #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    # Security privileges for hardware access (Optional but often needed for raw device access)
+    privileged: true
+  # Future Services
+  # redis:
+  #   image: redis:alpine
+  #   ports: ["6379:6379"]

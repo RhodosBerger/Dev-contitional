@@ -27,25 +27,12 @@ class CortexEngine:
         # 1. Initialize Core Engines
         self.dopamine = DopamineEngine()
         self.streamer = ParallelStreamer(self.dopamine)
-        self.optimizer = EvolutionaryOptimizer()
+        self.optimizer = EvolutionaryOptimizer(self.dopamine) # Modified to pass dopamine engine
         self.tracer = HexTraceLogger()
+        self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=1) # Added for background tasks
         
         self.logger.info("Cortex Engine Initialized. Architecture Extended.")
 
-    def execute_job(self, profile: Dict[str, Any], optimize: bool = True) -> Generator[Dict, None, None]:
-        """
-        Executes a manufacturing job.
-        """
-        self.logger.info(f"Received Job. Optimize={optimize}")
-        
-        # 2. Optimization Phase (Discovery)
-        final_profile = profile
-        if optimize:
-            self.logger.info("Running Evolutionary Optimizer...")
-            final_profile = self.optimizer.evolve_profile(profile)
-            self.logger.info("Optimization Complete. Best Mutant Selected.")
-
-        # 3. Execution Phase (Parallel Streamer)
         for event in self.streamer.execute_profile(final_profile):
             # Pass through events
             yield event

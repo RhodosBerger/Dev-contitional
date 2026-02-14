@@ -11,22 +11,23 @@ except ImportError:
         def calculate_current_state(self, id): return {"cortisol": 0.1}
 
 from backend.core.resource_governor import ResourceGovernor
-from backend.integrations.grid_interface import GridInterface
 from backend.core.covalent_tensors import TensorSpectrum
 from backend.core.hex_logger import HexTraceLogger
+from backend.core.gamesa_grid_vulkan import GamesaGridVulkan as GamesaGrid
 
 class ParallelStreamer:
     """
-    Executes 'Advanced Profiles' using a Parallel Worker Pool paradigm.
-    Instead of checking serially, it dispatches 'Risk', 'Grid', and 'Optimization' tasks concurrently.
+    Parallel Streamer - Intel Optimized Edition.
+    Uses Vulkan Compute (GamesaGridVulkan) for physical simulation.
     """
     def __init__(self, dopamine_engine: DopamineEngine):
-        self.engine = dopamine_engine
-        self.governor = ResourceGovernor()
-        self.grid = GridInterface()
-        self.spectrum = TensorSpectrum() # The Shared State
-        self.hex_logger = HexTraceLogger() # Advanced Tracer
         self.logger = logging.getLogger("ParallelStreamer")
+        self.dopamine_engine = dopamine_engine
+        self.resource_governor = ResourceGovernor()
+        # Initialize Gamesa Grid (Vulkan)
+        self.grid = GamesaGrid(resolution=256) 
+        self.spectrum = TensorSpectrum()
+        self.trace_logger = HexTraceLogger() # Advanced Tracer
         
         # The "Pools" that interact with functions
         self.worker_pool = ThreadPoolExecutor(max_workers=4) 
@@ -83,8 +84,15 @@ class ParallelStreamer:
         self.spectrum.bond(0, risk_val)
 
     def _check_physical_risk(self, segment):
-        # Grid Pool Logic - Bond with Index 2 (Grid Risk)
-        status = self.grid.simulate_segment(segment)
+        # 3D Voxel Simulation (High Perf)
+        try:
+            status = self.grid.simulate_segment(segment)
+            if status == "COLLISION":
+                self.spectrum.add_stress(0.5) # Add physical stress to tensor
+            return status
+        except Exception as e:
+            self.logger.error(f"Grid Error: {e}")
+            return "ERROR"
         if status in ["COLLISION", "RISK"]:
              self.spectrum.bond(2, 1.0) # Maximum risk
         else:

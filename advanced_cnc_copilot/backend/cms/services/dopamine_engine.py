@@ -54,8 +54,20 @@ class DopamineEngine:
                 if os.path.exists(model_path):
                     self.ov_core = Core()
                     model = self.ov_core.read_model(model=model_path)
-                    self.compiled_model = self.ov_core.compile_model(model=model, device_name="AUTO")
-                    logger.info("OpenVINO Phantom Trauma Model loaded successfully.")
+                    
+                    # PC Stack Optimization: Check for GPU and set Throughput Hint
+                    devices = self.ov_core.available_devices
+                    device_name = "AUTO"
+                    config = {}
+                    
+                    if "GPU" in devices:
+                        device_name = "GPU"
+                        # "Advanced Analog Features": Increase Bandwidth via Throughput Streams
+                        config = {"PERFORMANCE_HINT": "THROUGHPUT"}
+                        logger.info("PC Krystal Stack: GPU Detected. Engaging High-Bandwidth Throughput Mode.")
+                    
+                    self.compiled_model = self.ov_core.compile_model(model=model, device_name=device_name, config=config)
+                    logger.info(f"OpenVINO Phantom Trauma Model loaded on {device_name}.")
             except Exception as e:
                 logger.warning(f"Failed to load OpenVINO model: {e}")
     
