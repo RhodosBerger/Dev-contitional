@@ -1,0 +1,47 @@
+{
+    "timestamp": "2026-02-17T18:31:03.981254",
+    "device": "CPU",
+    "total_samples": 5,
+    "results": [
+        {
+            "id": "sample_0000",
+            "preset": "tech",
+            "mode": "standard",
+            "latency_ms": 15.4,
+            "status": "COMPILED",
+            "output": "compiled_dataset/sample_0000_tech_standard.txt"
+        },
+        {
+            "id": "sample_0001",
+            "preset": "nature",
+            "mode": "edge",
+            "latency_ms": 15.4,
+            "status": "COMPILED",
+            "output": "compiled_dataset/sample_0001_nature_edge.txt"
+        },
+        {
+            "id": "sample_0002",
+            "preset": "architecture",
+            "mode": "cyberpunk",
+            "latency_ms": 15.4,
+            "status": "COMPILED",
+            "output": "compiled_dataset/sample_0002_architecture_cyberpunk.txt"
+        },
+        {
+            "id": "sample_0003",
+            "preset": "tech",
+            "mode": "retro",
+            "latency_ms": 15.4,
+            "status": "COMPILED",
+            "output": "compiled_dataset/sample_0003_tech_retro.txt"
+        },
+        {
+            "id": "sample_0004",
+            "preset": "nature",
+            "mode": "sketch",
+            "latency_ms": 15.4,
+            "status": "COMPILED",
+            "output": "compiled_dataset/sample_0004_nature_sketch.txt"
+        }
+    ]
+}
